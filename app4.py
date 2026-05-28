@@ -9,8 +9,9 @@ import time
 # -----------------------------------
 # OpenAI Client
 # -----------------------------------
-client = OpenAI()
-
+client = OpenAI(
+    api_key=st.secrets["OPENAI_API_KEY"]
+)
 # -----------------------------------
 # Streamlit Config
 # -----------------------------------
