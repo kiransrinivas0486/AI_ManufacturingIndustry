@@ -154,7 +154,7 @@ Detailed Analysis: <specific action visible>
                         confidence = "Unknown"
                         detailed_analysis = analysis
 
-                        for line in analysis.split("\\n"):
+                        for line in analysis.split("\n"):
 
                             if line.startswith("Step Name:"):
                                 step_name = line.replace(
