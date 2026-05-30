@@ -52,14 +52,13 @@ if uploaded_file is not None:
 
                 st.write(f"🎥 FPS Detected: {fps}")
 
-                frame_interval = int(fps * 15)
+                frame_interval = int(fps * 5)
                 frame_count = 0
 
-                max_frames = 12
+                max_frames = 999
                 processed_frames = 0
 
                 raw_steps = []
-                frame_buffer = []
 
                 progress = st.progress(0)
 
@@ -86,27 +85,14 @@ if uploaded_file is not None:
                             frame
                         )
 
-                        #with open(frame_filename, "rb") as image_file:
-
-                        #    image_base64 = base64.b64encode(
-                        #        image_file.read()
-                        #    ).decode("utf-8")
-
-                        #response = client.chat.completions.create(
-                      
                         with open(frame_filename, "rb") as image_file:
 
-                                image_base64 = base64.b64encode(
-                                    image_file.read()
-                                ).decode("utf-8")
+                            image_base64 = base64.b64encode(
+                                image_file.read()
+                            ).decode("utf-8")
 
-                        frame_buffer.append(
-                                image_base64
-                            )
+                        response = client.chat.completions.create(
 
-                        if len(frame_buffer) == 5:
-
-                                response = client.chat.completions.create(                      
                             model="gpt-4o-mini",
 
                             messages=[
