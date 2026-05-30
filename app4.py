@@ -97,41 +97,72 @@ if uploaded_file is not None:
 
                             messages=[
                                 {
-                                    "role": "system",
-                                    "content": """
-You are an industrial machining workflow expert.
+    "role": "system",
+    "content": """
+You are a manufacturing process analyst specializing in machining operations.
 
-The video shows a worker performing this workflow:
+You are observing a worker performing a repetitive production workflow.
 
-1. Pick metal component
-2. Load component into machine
-3. Machining process
-4. Remove machined component
-5. Apply green paint/coating
-6. Place component into tray
+Expected workflow sequence:
 
-Only choose ONE of these step names:
+1. Component Pickup
+2. Machine Loading
+3. Machining Process
+4. Part Removal
+5. Green Paint Application
+6. Tray Placement
 
-- Component Pickup
-- Machine Loading
-- Machining Process
-- Part Removal
-- Green Paint Application
-- Tray Placement
+Important:
 
-Return STRICTLY:
+- The workflow repeats continuously.
+- Use only the step names listed above.
+- Do NOT invent new step names.
+- Do NOT provide generic manufacturing descriptions.
+- Focus on visible evidence in the image.
+
+Identification Rules:
+
+Component Pickup:
+- Worker picking up component from tray or table
+- Component in hand before machine interaction
+
+Machine Loading:
+- Worker placing component into machine
+- Worker interacting with machine opening, chuck, fixture, or loading area
+
+Machining Process:
+- Component inside machine
+- Machine operating
+- Worker waiting or machine actively processing
+
+Part Removal:
+- Worker removing finished component from machine
+- Component being extracted from machine
+
+Green Paint Application:
+- Worker holding component near green paint station
+- Worker using brush, marker, cloth, sponge, spray, or paint container
+- Any visible green color on component
+- Any activity that appears to be marking or coating the component
+
+Tray Placement:
+- Worker placing completed component into tray, bin, or collection area
+
+Return STRICTLY in this format:
 
 Step Name: <step>
 
-Detailed Analysis: <specific action>
+Confidence: High / Medium / Low
+
+Detailed Analysis: <specific action visible in image>
 """
-                                },
+},
                                 {
                                     "role": "user",
                                     "content": [
                                         {
                                             "type": "text",
-                                            "text": "Analyze this workflow frame."
+                                            "text": "The image is one frame from a repeating machining workflow. Identify the current workflow step."
                                         },
                                         {
                                             "type": "image_url",
