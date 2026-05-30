@@ -7,7 +7,7 @@ import tempfile
 import time
 
 # -----------------------------------
-# OpenAI Client
+# OpenAI Client ̰
 # -----------------------------------
 client = OpenAI(
     api_key=st.secrets["OPENAI_API_KEY"]
@@ -406,6 +406,50 @@ Detailed Analysis: <specific action>
                     "Detailed Analysis":
                         current_analysis
                 })
+                            # -----------------------------------
+            # Expected Workflow
+            # -----------------------------------
+            expected_steps = [
+                "Component Pickup",
+                "Machine Loading",
+                "Machining Process",
+                "Part Removal",
+                "Green Paint Application",
+                "Tray Placement"
+            ]
+
+            # -----------------------------------
+            # Extract Detected Steps
+            # -----------------------------------
+            detected_steps = []
+
+            for step in workflow_results:
+                detected_steps.append(
+                    step["Step Name"]
+                )
+
+            # -----------------------------------
+            # Find Missing Steps
+            # -----------------------------------
+            missing_steps = []
+
+            for step in expected_steps:
+
+                if step not in detected_steps:
+                    missing_steps.append(step)
+
+            # -----------------------------------
+            # Compliance Score
+            # -----------------------------------
+            found_steps = (
+                len(expected_steps)
+                - len(missing_steps)
+            )
+
+            compliance_score = (
+                found_steps
+                / len(expected_steps)
+            ) * 100
 
             # -----------------------------------
             # Display Results
@@ -417,6 +461,44 @@ Detailed Analysis: <specific action>
             st.success(
                 "✅ Workflow Analysis Complete!"
             )
+
+            # -----------------------------------
+            # Workflow Summary
+            # -----------------------------------
+            st.subheader(
+                "📊 Workflow Compliance Summary"
+            )
+
+            st.metric(
+                "Compliance Score",
+                f"{compliance_score:.1f}%"
+            )
+
+            st.write(
+                f"Detected {found_steps} of "
+                f"{len(expected_steps)} expected steps."
+            )
+
+            # -----------------------------------
+            # Missing Steps
+            # -----------------------------------
+            if missing_steps:
+
+                st.warning(
+                    "⚠️ Missing Workflow Steps Detected"
+                )
+
+                for step in missing_steps:
+
+                    st.write(
+                        f"❌ {step}"
+                    )
+
+            else:
+
+                st.success(
+                    "✅ All workflow steps detected"
+                )
 
             st.subheader(
                 "📋 Intelligent Workflow Timeline"
