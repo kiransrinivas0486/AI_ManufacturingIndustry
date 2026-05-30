@@ -55,7 +55,7 @@ if uploaded_file is not None:
                 frame_interval = int(fps * 5)
                 frame_count = 0
 
-                max_frames = 999
+                max_frames = 12
                 processed_frames = 0
 
                 raw_steps = []
@@ -90,7 +90,7 @@ if uploaded_file is not None:
                             image_base64 = base64.b64encode(
                                 image_file.read()
                             ).decode("utf-8")
-
+                    try:
                         response = client.chat.completions.create(
 
                             model="gpt-4o-mini",
@@ -176,7 +176,9 @@ Detailed Analysis: <specific action visible in image>
                         )
 
                         analysis = response.choices[0].message.content
-
+                    except Exception as e:
+                        st.error(f"OpenAI Error: {e}")
+                        break
                         time.sleep(1)
 
                         step_name = "Unknown"
