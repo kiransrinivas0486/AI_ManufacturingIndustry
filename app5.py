@@ -143,7 +143,8 @@ Detailed Analysis: <specific action visible>
                             )
 
                             analysis = response.choices[0].message.content
-
+                            st.write("RAW GPT RESPONSE")
+                            st.write(analysis)
                         except Exception as e:
 
                             st.error(f"OpenAI Error: {e}")
