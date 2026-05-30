@@ -38,10 +38,22 @@ uploaded_file = st.file_uploader(
 # If File Uploaded
 # -----------------------------------
 if uploaded_file is not None:
+    col1, col2 = st.columns([1, 2])
 
-    st.subheader("📹 Uploaded Video")
+with col1:
+
+    st.subheader("📹 Video")
 
     st.video(uploaded_file)
+
+with col2:
+
+    st.subheader(
+        "📊 Analysis Results"
+    )
+    #st.subheader("📹 Uploaded Video")
+
+    #st.video(uploaded_file)
 
     # -----------------------------------
     # Analyze Button
@@ -84,7 +96,7 @@ if uploaded_file is not None:
             # -----------------------------------
             # Safety Limit
             # -----------------------------------
-            max_frames = 25
+            max_frames = 999
 
             processed_frames = 0
 
@@ -353,16 +365,39 @@ Detailed Analysis: <specific action>
                             end_time - start_time
                         )
 
+                        #workflow_results.append({
+
+                        #    "Start Time":
+                        #        f"{int(start_time)} sec",
+
+                        #    "End Time":
+                        #        f"{int(end_time)} sec",
+
+                        #    "Duration":
+                        #        f"{int(duration)} sec",
+
+                        #    "Step Name":
+                        #        current_name,
+
+                        #    "Detailed Analysis":
+                        #        current_analysis
+                        #})
+                        final_timestamp = raw_steps[-1]["timestamp"]
+
+                        final_duration = (
+                            final_timestamp - start_time
+                        )
+
                         workflow_results.append({
 
                             "Start Time":
                                 f"{int(start_time)} sec",
 
                             "End Time":
-                                f"{int(end_time)} sec",
+                                f"{int(final_timestamp)} sec",
 
                             "Duration":
-                                f"{int(duration)} sec",
+                                f"{int(final_duration)} sec",
 
                             "Step Name":
                                 current_name,
@@ -370,7 +405,6 @@ Detailed Analysis: <specific action>
                             "Detailed Analysis":
                                 current_analysis
                         })
-
                         # Start New Step
                         current_step = next_step
 
@@ -468,7 +502,8 @@ Detailed Analysis: <specific action>
             st.subheader(
                 "📊 Workflow Compliance Summary"
             )
-
+        with col2:
+            
             st.metric(
                 "Compliance Score",
                 f"{compliance_score:.1f}%"
