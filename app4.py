@@ -52,10 +52,10 @@ if uploaded_file is not None:
 
                 st.write(f"🎥 FPS Detected: {fps}")
 
-                frame_interval = int(fps * 5)
+                frame_interval = int(fps * 8)
                 frame_count = 0
 
-                max_frames = 999
+                max_frames = 8
                 processed_frames = 0
 
                 raw_steps = []
