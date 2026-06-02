@@ -55,16 +55,18 @@ if uploaded_file is not None:
 
                 st.write(f"🎥 FPS Detected: {fps:.2f}")
 
-                frame_interval = int(fps * 2)
+                frame_interval = int(fps * 5)
                 max_frames = 12
+
+                
 
                 frame_count = 0
                 processed_frames = 0
 
                 raw_steps = []
-                frame_buffer = []
-
+                frame_buffer = [] 
                 progress = st.progress(0)
+                st.write(f"Clip Size: {len(frame_buffer)}")
 
                 while True:
 
@@ -131,15 +133,13 @@ Expected workflow:
                                         "content": [
                                             {
                                                 "type": "text",
-                                                "text": """These 5 images are consecutive frames from the same workflow.
+                                                "text": """You are receiving 5 consecutive images.
 
-                                                 Analyze the motion and progression across all images.
+Determine the MOST LIKELY workflow step represented by the sequence.
 
-                                                 Determine:
+Focus on movement between frames.
 
-                                                 1. Current workflow step
-                                                 2. Evidence from image sequence
-                                                 3. Confidence level
+Do not classify based on a single image.
 
                                                  Do NOT analyze each image separately.
                                                  Treat them as a short video clip.
