@@ -55,13 +55,14 @@ if uploaded_file is not None:
 
                 st.write(f"🎥 FPS Detected: {fps:.2f}")
 
-                frame_interval = int(fps * 5)
+                frame_interval = int(fps * 2)
                 max_frames = 12
 
                 frame_count = 0
                 processed_frames = 0
 
                 raw_steps = []
+                frame_buffer = []
 
                 progress = st.progress(0)
 
@@ -87,18 +88,35 @@ if uploaded_file is not None:
                             image_base64 = base64.b64encode(
                                 image_file.read()
                             ).decode("utf-8")
-
+                        frame_buffer.append(image_base64)
                         try:
-
+                            if len(frame_buffer) < 5:
+                             frame_count += 1
+                             continue
                             response = client.chat.completions.create(
                                 model="gpt-4o-mini",
                                 messages=[
                                     {
                                         "role": "system",
                                         "content": """
-You are a manufacturing process analyst specializing in machining operations.
+You are a manufacturing workflow analyst.
 
-Expected workflow sequence:
+You will receive 5 consecutive images captured from the same manufacturing operation.
+
+Treat the images as a short video clip.
+
+Analyze:
+
+- Worker motion
+- Component movement
+- Machine interaction
+- Workflow progression
+
+Do not classify based on a single image.
+
+Use the sequence of images to determine the workflow step.
+
+Expected workflow:
 
 1. Component Pickup
 2. Machine Loading
@@ -106,22 +124,6 @@ Expected workflow sequence:
 4. Part Removal
 5. Green Paint Application
 6. Tray Placement
-
-Rules:
-
-- The workflow repeats continuously.
-- Use ONLY the step names listed above.
-- Do NOT invent new steps.
-- Do NOT provide generic manufacturing descriptions.
-- Focus only on visible evidence.
-
-Return STRICTLY:
-
-Step Name: <step>
-
-Confidence: High / Medium / Low
-
-Detailed Analysis: <specific action visible>
 """
                                     },
                                     {
@@ -129,20 +131,37 @@ Detailed Analysis: <specific action visible>
                                         "content": [
                                             {
                                                 "type": "text",
-                                                "text": "The image is one frame from a repeating machining workflow. Identify the current workflow step."
+                                                "text": """These 5 images are consecutive frames from the same workflow.
+
+                                                 Analyze the motion and progression across all images.
+
+                                                 Determine:
+
+                                                 1. Current workflow step
+                                                 2. Evidence from image sequence
+                                                 3. Confidence level
+
+                                                 Do NOT analyze each image separately.
+                                                 Treat them as a short video clip.
+                                                   """
                                             },
-                                            {
+                                         ]
+                                         +
+                                         [
+                                        {
                                                 "type": "image_url",
                                                 "image_url": {
-                                                    "url": f"data:image/jpeg;base64,{image_base64}"
+                                                    "url": f"data:image/jpeg;base64,{img}"
                                                 }
                                             }
+                                            for img in frame_buffer                                        
                                         ]
                                     }
                                 ]
                             )
 
                             analysis = response.choices[0].message.content
+                            frame_buffer = []
                             st.write("RAW GPT RESPONSE")
                             st.write(analysis)
                         except Exception as e:
