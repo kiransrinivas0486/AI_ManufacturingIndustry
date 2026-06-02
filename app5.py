@@ -79,7 +79,7 @@ if uploaded_file is not None:
 
                         timestamp = frame_count / fps
 
-                        frame = cv2.resize(frame, (640, 360))
+                        frame = cv2.resize(frame, (256, 144))
 
                         frame_filename = f"frame_{int(timestamp)}.jpg"
 
