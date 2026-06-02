@@ -56,7 +56,7 @@ if uploaded_file is not None:
                 st.write(f"🎥 FPS Detected: {fps:.2f}")
 
                 frame_interval = int(fps * 5)
-                max_frames = 12
+                max_frames = 5
 
                 
 
@@ -107,25 +107,23 @@ You will receive 5 consecutive images captured from the same manufacturing opera
 
 Treat the images as a short video clip.
 
-Analyze:
+You are analyzing 5 consecutive images from a machining workflow.
 
-- Worker motion
-- Component movement
-- Machine interaction
-- Workflow progression
-
-Do not classify based on a single image.
-
-Use the sequence of images to determine the workflow step.
-
-Expected workflow:
-
+Expected steps:
 1. Component Pickup
 2. Machine Loading
 3. Machining Process
 4. Part Removal
 5. Green Paint Application
 6. Tray Placement
+
+Use the image sequence to determine the most likely step.
+
+Return:
+
+Step Name:
+Confidence:
+Detailed Analysis:
 """
                                     },
                                     {
@@ -174,7 +172,7 @@ Do not classify based on a single image.
                         detailed_analysis = analysis
 
                         for line in analysis.split("\n"):
-
+                            clean_line = line.replace("*", "").strip()
                             if line.startswith("Step Name:"):
                                 step_name = line.replace(
                                     "Step Name:",
